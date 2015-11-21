@@ -7,30 +7,38 @@
   </div>
 </nav>
 
+{{#each issues}}
+{{#if weather}}
 <div class="jumbotron" id="rainJumbotron">
   <h1>Pack an umbrella</h1>
   <br/>
-  <p>Looks like it'll be raining when you get to London. It'll be sunny half an hour later...</p>
+  <p>Looks like it'll be raining when you get to {{location}}. It'll be sunny half an hour later...</p>
   <br/>
   <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
 </div>
+{{/if}}
 
+{{#if concert}}
 <div class="jumbotron" id="concertJumbotron">
   <h1>Watch out for revellers</h1>
   <br/>
-  <p>There are likely to be more people on this service due to a concert. The next service should be calmer and have more seats</p>
+  <p>There are likely to be more people on this service due to the {{concert}} concert in {{location}}. The next service should be calmer and have more seats</p>
   <br/>
   <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
 </div>
+{{/if}}
 
+{{#if sports}}
 <div class="jumbotron" id="sportsJumbotron">
   <h1>Sport Warning!</h1>
   <br/>
-  <p>Your journey coinsides with a major sporting event. Perhaps grab an earlier train to get a seat?</p>
+  <p>Your journey coinsides with a major sporting event -- {{sports}} at {{location}}. Perhaps grab an earlier train to get a seat?</p>
   <br/>
   <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
 </div>
+{{/if}}
 
+{{#if disruption}}
 <div class="jumbotron" id="disruptionJumbotron">
   <h1>Expect a bus ride</h1>
   <br/>
@@ -38,3 +46,5 @@
   <br/>
   <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
 </div>
+{{/if}}
+{{/each}}
