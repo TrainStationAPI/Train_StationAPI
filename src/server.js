@@ -5,6 +5,7 @@ import config from './config/config.json';
 import routeApi from './routes/api';
 import routeWebApp from './routes/webapp';
 import GetTripDetails from './api-integrations/GetDetails/GetTripDetails';
+import WeatherReport from './api-integrations/weather/WeatherReport';
 
 const app = express();
 
@@ -28,3 +29,4 @@ const server = app.listen(config.port, () => {
 
 
 GetTripDetails();
+WeatherReport();
