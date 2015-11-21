@@ -1,3 +1,5 @@
+import request from 'request';
+
 // getTripDetails
 // args  OriginCode, DestinationCode, DateTime
 // returns trip details, with weather adn eventful
@@ -11,67 +13,44 @@
 
 // Runtime code
 // Test Data
-export default function(){
-	var OriginCode = "MAN";
-	var DestinationCode = "EUS";
-	var DateTime = "2015-12-06T12:00";
+export default function() {
+	let OriginCode = "MAN";
+	let DestinationCode = "EUS";
+	let DateTime = "2015-12-06T12:00";
 
-	setSilverRailKey("1333ecbd-2a86-08a5-7168-d325c905a731");
-	setDataSet("UKNational");
-	getTripDetails(OriginCode, DestinationCode, DateTime);
-}
-//
-
-
-var silverRailKey;
-var dataSet;
-
-function setSilverRailKey(key){
-	if(key){
-		silverRailKey = key;
-	}
-	else{
-		console.log("Please provide key. ");
-	}
+	let silverRailKey = "1333ecbd-2a86-08a5-7168-d325c905a731";
+	let dataSet = "UKNational";
+	getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey);
 }
 
-function setDataSet(dataSetInput){
-	if(dataSetInput){
-		dataset = dataSetInput;
-	}
-	else{
-		console.log("Please provide data set.");
-	}
-}
-
-function getTripDetails(OriginCode, DestinationCode, DateTime) {
+function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey) {
 
 	// Get Journey Plan info from Silver Rail API.  Uses Start and end location to get a TripUid
-	var journeyPlanRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/JourneyPlan?from=" + OriginCode + "&to=" + DestinationCode + "&date=" + DateTime + "&ApiKey=" + silverRailKey + "&format=json";
-	var journeyPlanJSON = httpGet(journeyPlanRequestURL);
-	var journeyPlanObj = JSON.parse(journeyPlanJSON);
+	let journeyPlanRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/JourneyPlan?from=" + OriginCode + "&to=" + DestinationCode + "&date=" + DateTime + "&ApiKey=" + silverRailKey + "&format=json";
+	let journeyPlanJSON = httpGet(journeyPlanRequestURL);
+	let journeyPlanObj = JSON.parse(journeyPlanJSON);
 
-	var tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
+	let tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
 
 	// Using TripUid, get the array of station Codes for stations that the trip passes through
-	var tripRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/Trip?ApiKey=" + silverRailKey + "&TripUid=" + tripUid + "&TripDate=" + DateTime + "&format=json";
-	var tripJSON = httpGet(tripRequestURL);
-	var tripObj = JSON.parse(tripJSON);
-	var tripStops = tripObj.TripStops;
+	let tripRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/Trip?ApiKey=" + silverRailKey + "&TripUid=" + tripUid + "&TripDate=" + DateTime + "&format=json";
+	let tripJSON = httpGet(tripRequestURL);
+	let tripObj = JSON.parse(tripJSON);
+	let tripStops = tripObj.TripStops;
 
-	var stopCodeArray = [];
-	for(var i = 0; i < tripStops.length; i++){
+	let stopCodeArray = [];
+	for(let i = 0; i < tripStops.length; i++){
 		stopCodeArray.push(tripStops[i].Code);
 	}
 
 	// get station postcode using station codes
 
-	var stationPostCodeArray = [];
-	for(var i = 0; i< stopCodeArray.length; i++){
-		var stopCode = stopCodeArray[i];
-		var stationInfoRequestURL = "http://ojp.nationalrail.co.uk/find/stationsInformation?stationCrsList=" + stopCode;
-		var stationInfoJSON = httpGet(stationInfoRequestURL);
-		var stationInfoObj = JSON.parse(stationInfoJSON);
+	let stationPostCodeArray = [];
+	for(let i = 0; i< stopCodeArray.length; i++){
+		let stopCode = stopCodeArray[i];
+		let stationInfoRequestURL = "http://ojp.nationalrail.co.uk/find/stationsInformation?stationCrsList=" + stopCode;
+		let stationInfoJSON = httpGet(stationInfoRequestURL);
+		let stationInfoObj = JSON.parse(stationInfoJSON);
 
 		stationPostCodeArray.push(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
 
@@ -84,19 +63,3 @@ function getTripDetails(OriginCode, DestinationCode, DateTime) {
 
 
 }
-
-
-function httpGet(theUrl)
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
-}
-
-
-
-
-
-
-

@@ -28,6 +28,7 @@
     "bunyan": "^1.5.1",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
+    "request": "^2.67.0",
     "webpack": "^1.12.8"
   },
   "devDependencies": {
