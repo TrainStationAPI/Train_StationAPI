@@ -1,4 +1,4 @@
-import request from 'request';
+import rp from 'request-promise';
 
 // getTripDetails
 // args  OriginCode, DestinationCode, DateTime
@@ -27,39 +27,45 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 
 	// Get Journey Plan info from Silver Rail API.  Uses Start and end location to get a TripUid
 	let journeyPlanRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/JourneyPlan?from=" + OriginCode + "&to=" + DestinationCode + "&date=" + DateTime + "&ApiKey=" + silverRailKey + "&format=json";
-	let journeyPlanJSON = httpGet(journeyPlanRequestURL);
-	let journeyPlanObj = JSON.parse(journeyPlanJSON);
+	rp(journeyPlanRequestURL).then(function(body) {
+		let journeyPlanJSON = body;
+		let journeyPlanObj = JSON.parse(journeyPlanJSON);
 
-	let tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
+		let tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
+		console.log(tripUid);
 
-	// Using TripUid, get the array of station Codes for stations that the trip passes through
-	let tripRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/Trip?ApiKey=" + silverRailKey + "&TripUid=" + tripUid + "&TripDate=" + DateTime + "&format=json";
-	let tripJSON = httpGet(tripRequestURL);
-	let tripObj = JSON.parse(tripJSON);
-	let tripStops = tripObj.TripStops;
+		// Using TripUid, get the array of station Codes for stations that the trip passes through
+		let tripRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/Trip?ApiKey=" + silverRailKey + "&TripUid=" + tripUid + "&TripDate=" + DateTime + "&format=json";
+		console.log(`Gonna get ${tripRequestURL}`);
 
-	let stopCodeArray = [];
-	for(let i = 0; i < tripStops.length; i++){
-		stopCodeArray.push(tripStops[i].Code);
-	}
+		rp(tripRequestURL).then(function(body) {
+			let tripJSON = body;
 
-	// get station postcode using station codes
+			let tripObj = JSON.parse(tripJSON);
+			let tripStops = tripObj.TripStops;
 
-	let stationPostCodeArray = [];
-	for(let i = 0; i< stopCodeArray.length; i++){
-		let stopCode = stopCodeArray[i];
-		let stationInfoRequestURL = "http://ojp.nationalrail.co.uk/find/stationsInformation?stationCrsList=" + stopCode;
-		let stationInfoJSON = httpGet(stationInfoRequestURL);
-		let stationInfoObj = JSON.parse(stationInfoJSON);
+			let stopCodeArray = [];
+			for(let i = 0; i < tripStops.length; i++){
+				stopCodeArray.push(tripStops[i].Code);
+			}
 
-		stationPostCodeArray.push(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
+			console.log("%j", stopCodeArray);
 
-		console.log(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
-	}
+			// get station postcode using station codes
+			let promises = [];
+			for(let i = 0; i< stopCodeArray.length; i++) {
+				let stopCode = stopCodeArray[i];
+				let stationInfoRequestURL = "http://ojp.nationalrail.co.uk/find/stationsInformation?stationCrsList=" + stopCode;
+				promises.push(rp(stationInfoRequestURL));
+			}
 
-	// call Event API with these postcodes in stationPostCodeArray
-
-
-
-
+			Promise.all(promises).then(function(data) {
+				data.forEach(function(stationInfoJSON) {
+					let stationInfoObj = JSON.parse(stationInfoJSON);
+					stationPostCodeArray.push(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
+					console.log(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
+				});
+			});
+		});
+	});
 }

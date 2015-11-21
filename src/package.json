@@ -26,9 +26,11 @@
   "homepage": "ttps://github.com/TrainStationAPI/Train_StationAPI#readme",
   "dependencies": {
     "bunyan": "^1.5.1",
+    "continuation-local-storage": "^3.1.4",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
     "request": "^2.67.0",
+    "request-promise": "^1.0.2",
     "webpack": "^1.12.8"
   },
   "devDependencies": {
