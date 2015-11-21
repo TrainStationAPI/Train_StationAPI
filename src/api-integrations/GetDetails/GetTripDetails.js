@@ -23,6 +23,10 @@ export default function() {
 	getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey);
 }
 
+class TripDetails(){
+	constructor()	
+}
+
 function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey) {
 
 	// Get Journey Plan info from Silver Rail API.  Uses Start and end location to get a TripUid
@@ -33,6 +37,11 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 
 		let tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
 		console.log(tripUid);
+
+
+		// Use destinationLocation to create WeatherAPI request
+		let destinationLocation = journeyPlanObj.Locations[1].Location.Position;
+		console.log("Destination Coordinates:  " + destinationLocation);
 
 		// Using TripUid, get the array of station Codes for stations that the trip passes through
 		let tripRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/Trip?ApiKey=" + silverRailKey + "&TripUid=" + tripUid + "&TripDate=" + DateTime + "&format=json";
@@ -46,11 +55,17 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 
 			let stopCodeArray = [];
 			for(let i = 0; i < tripStops.length; i++){
-				stopCodeArray.push(tripStops[i].Code);
+				stopCodeArray.push(tripStops[i].TransitStop.Code);
 			}
 
 			console.log("%j", stopCodeArray);
 
+			// Run event queries here using stopCodeArray.  This array contains the 3 char code for each stop.  
+
+
+
+
+			/*
 			// get station postcode using station codes
 			let promises = [];
 			for(let i = 0; i< stopCodeArray.length; i++) {
@@ -66,6 +81,12 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 					console.log(stationInfoObj[0].stationInformatio.stationBasic.postalAddress.addressPostcode);
 				});
 			});
+
+			*/
 		});
 	});
+	return;
 }
+
+
+
