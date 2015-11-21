@@ -1,3 +1,6 @@
 {
-  "port": 3000
+  "port": 3000,
+  "silverSearch": {
+    "APIKey": "1333ecbd-2a86-08a5-7168-d325c905a731"
+  }
 }
