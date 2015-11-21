@@ -4,6 +4,7 @@ import log from './log';
 import config from './config/config.json';
 import routeApi from './routes/api';
 import routeWebApp from './routes/webapp';
+import GetTripDetails from 'api-integrations/GetDetails/GetTripDetails';
 
 const app = express();
 
@@ -24,3 +25,6 @@ routeWebApp(app);
 const server = app.listen(config.port, () => {
   log.info(`TrainAPI HTTP server running on ${server.address().address}:${server.address().port}`);
 });
+
+
+GetTripDetails();

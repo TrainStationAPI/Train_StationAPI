@@ -11,13 +11,15 @@
 
 // Runtime code
 // Test Data
-var OriginCode = "MAN";
-var DestinationCode = "EUS";
-var DateTime = "2015-12-06T12:00";
+export default function(){
+	var OriginCode = "MAN";
+	var DestinationCode = "EUS";
+	var DateTime = "2015-12-06T12:00";
 
-setSilverRailKey("1333ecbd-2a86-08a5-7168-d325c905a731");
-setDataSet("UKNational");
-getTripDetails(OriginCode, DestinationCode, DateTime);
+	setSilverRailKey("1333ecbd-2a86-08a5-7168-d325c905a731");
+	setDataSet("UKNational");
+	getTripDetails(OriginCode, DestinationCode, DateTime);
+}
 //
 
 
