@@ -1,0 +1,50 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">TrainGuard</a>
+      <p class="navbar-text">Calmer, Drier Journeys</p>
+    </div>
+  </div>
+</nav>
+
+{{#each issues}}
+{{#if weather}}
+<div class="jumbotron" id="rainJumbotron">
+  <h1>Pack an umbrella</h1>
+  <br/>
+  <p>Looks like it'll be raining when you get to {{weather}} in {{}}. It'll be sunny half an hour later...</p>
+  <br/>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
+</div>
+{{/if}}
+
+{{#if weather}}
+<div class="jumbotron" id="concertJumbotron">
+  <h1>Watch out for revellers</h1>
+  <br/>
+  <p>There are likely to be more people on this service due to the {{concert}} concert in {{location}}. The next service should be calmer and have more seats</p>
+  <br/>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
+</div>
+{{/if}}
+
+{{#if weather}}
+<div class="jumbotron" id="sportsJumbotron">
+  <h1>Sport Warning!</h1>
+  <br/>
+  <p>Your journey coinsides with a major sporting event. Perhaps grab an earlier train to get a seat?</p>
+  <br/>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
+</div>
+{{/if}}
+
+{{#if weather}}
+<div class="jumbotron" id="disruptionJumbotron">
+  <h1>Expect a bus ride</h1>
+  <br/>
+  <p>Trains are experiencing disruption. Could you travel at another time?</p>
+  <br/>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Reschedule</a>
+</div>
+{{/if}}
+{{/each}}

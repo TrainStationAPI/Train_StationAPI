@@ -6,7 +6,7 @@ export default function(router) {
   });
 
   router.get('/:originStationCode/:destinationStationCode/:dateTime', (req, res) => {
-    res.render('index', {
+    res.render('issues', {
       title: "Your Journey"
     });
   });
