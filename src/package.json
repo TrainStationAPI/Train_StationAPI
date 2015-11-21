@@ -26,7 +26,8 @@
   "homepage": "ttps://github.com/TrainStationAPI/Train_StationAPI#readme",
   "dependencies": {
     "bunyan": "^1.5.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "express-handlebars": "^2.0.1"
   },
   "devDependencies": {
     "babel": "^6.0.15",

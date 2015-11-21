@@ -1,5 +1,7 @@
 export default function(router) {
-  router.get('/', (req, res) => {
+  const apiBaseUrl = "/api/v1";
+
+  router.get(apiBaseUrl + '/', (req, res) => {
     res.send("Welcome to TrainAPI");
   });
 }
