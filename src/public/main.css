@@ -32,3 +32,11 @@ body {
 #concertJumbotron {
   background: url('/concert.jpg');
 }
+
+#sportsJumbotron {
+  background: url('/sports.jpg');
+}
+
+#disruptionJumbotron {
+  background: url('/bus.jpg');
+}
