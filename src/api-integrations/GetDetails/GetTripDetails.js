@@ -23,17 +23,31 @@ export default function() {
 	getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey);
 }
 
-class TripDetails(){
-	constructor()	
+class TripDetails{
+	constructor(silverRail, trainGuard)	{
+		this.SilverRail = silverRail;
+		this.TrainGuard = trainGuard;
+	}
+}
+
+class TrainGuard{
+	constructor(weather, concert, sports, disruption){
+		this.weather = weather;
+		this.concert = concert;
+		this.sports = sports;
+		this.disruption = disruption;
+	}
 }
 
 function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey) {
+
+	let journeyPlanObj;
 
 	// Get Journey Plan info from Silver Rail API.  Uses Start and end location to get a TripUid
 	let journeyPlanRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/JourneyPlan?from=" + OriginCode + "&to=" + DestinationCode + "&date=" + DateTime + "&ApiKey=" + silverRailKey + "&format=json";
 	rp(journeyPlanRequestURL).then(function(body) {
 		let journeyPlanJSON = body;
-		let journeyPlanObj = JSON.parse(journeyPlanJSON);
+		journeyPlanObj = JSON.parse(journeyPlanJSON);
 
 		let tripUid = journeyPlanObj.Journeys[0].Legs[0].TripUid;
 		console.log(tripUid);
@@ -85,7 +99,11 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 			*/
 		});
 	});
-	return;
+
+	
+	let returnData = new TripDetails(journeyPlanObj, new TrainGuard(null, null, null, null));
+
+	return returnData;
 }
 
 
