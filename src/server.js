@@ -29,4 +29,4 @@ const server = app.listen(config.port, () => {
 
 
 GetTripDetails();
-WeatherReport();
+//WeatherReport();

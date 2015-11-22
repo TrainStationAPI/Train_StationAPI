@@ -1,4 +1,5 @@
 import rp from 'request-promise';
+import weatherReport from './../weather/WeatherReport';
 
 // getTripDetails
 // args  OriginCode, DestinationCode, DateTime
@@ -16,7 +17,7 @@ import rp from 'request-promise';
 export default function() {
 	let OriginCode = "MAN";
 	let DestinationCode = "EUS";
-	let DateTime = "2015-12-06T12:00";
+	let DateTime = "2015-11-23T12:00";
 
 	let silverRailKey = "1333ecbd-2a86-08a5-7168-d325c905a731";
 	let dataSet = "UKNational";
@@ -42,6 +43,9 @@ class TrainGuard{
 function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey) {
 
 	let journeyPlanObj;
+	let weather = null;
+	let concert = null;
+	let sports = null;
 
 	// Get Journey Plan info from Silver Rail API.  Uses Start and end location to get a TripUid
 	let journeyPlanRequestURL = "http://journeyplanner.silverrailtech.com/journeyplannerservice/v2/REST/DataSets/" + dataSet + "/JourneyPlan?from=" + OriginCode + "&to=" + DestinationCode + "&date=" + DateTime + "&ApiKey=" + silverRailKey + "&format=json";
@@ -74,9 +78,34 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 
 			console.log("%j", stopCodeArray);
 
+
+			//let eventfulRequestURL = "http://api.eventful.com/rest/events/search?app_key=" + appKey+ "&where=" + location + "&within=5";
+
 			// Run event queries here using stopCodeArray.  This array contains the 3 char code for each stop.  
 
+			var stopCodeString = stopCodeArray[0];
+			for(var i = 1; i < stopCodeArray.length; i++){
+				stopCodeString += ", " + stopCodeArray[i];
+			}
 
+			console.log(stopCodeString);
+
+			// Get Weather Data
+			console.log(destinationLocation);
+
+			let longLat = destinationLocation.split(", ");
+
+			console.log(longLat[0]);
+			console.log(longLat[1]);
+			weather = weatherReport(longLat[0], longLat[1], DateTime);
+
+
+
+			// hit events API with the all stop code string.  
+
+			// store returned value into TrainGuard object
+
+			// create TripDetails object and return 
 
 
 			/*
@@ -101,10 +130,27 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 	});
 
 	
-	let returnData = new TripDetails(journeyPlanObj, new TrainGuard(null, null, null, null));
+	let returnData = new TripDetails(journeyPlanObj, new TrainGuard(weather, null, null, null));
 
 	return returnData;
 }
 
 
+
+/*
+			let jsonTrainsFileName = "JsonTrains.txt";
+			jsonTrainsFile = fopen(jsonTrainsFileName, 0); // Open the file for reading 
+			if(fh!=-1) // If the file has been successfully opened 
+			{ 
+			    length = flength(fh);         // Get the length of the file     
+			    str = fread(jsonTrainsFile, length);     // Read in the entire file 
+			    fclose(fh);                    // Close the file 
+			     
+			// Display the contents of the file     
+			    write(str);     
+			}
+			let jsonTrainsString = str;
+			let trainsJsonObj = JSON.parse(jsonTrainsString);
+
+*/
 
