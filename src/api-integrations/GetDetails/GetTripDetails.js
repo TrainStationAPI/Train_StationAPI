@@ -74,8 +74,10 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 			let tripStops = tripObj.TripStops;
 
 			let stopCodeArray = [];
+			let arrivalTimeArray = [];
 			for(let i = 0; i < tripStops.length; i++){
 				stopCodeArray.push(tripStops[i].TransitStop.Code);
+				arrivalTimeArray.push(tripStops[i].TransitStop.ArrivalTime);
 			}
 
 			console.log("%j", stopCodeArray);
@@ -85,17 +87,21 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 			// Run event queries here using stopCodeArray.  This array contains the 3 char code for each stop.  
 
 			var stopCodeString = stopCodeArray[0];
+			let arrivalTimeString = arrivalTimeArray[0];
 			for(var i = 1; i < stopCodeArray.length; i++){
 				stopCodeString += "," + stopCodeArray[i];
+				arrivalTimeString += "," + arrivalTimeArray[i];
 			}
 
 			console.log(stopCodeString);
 
 
-			let eventfulRequestURL = "https://microsoft-apiappda9cd0d4af914533b167fb676acf30d7.azurewebsites.net/api/Values?stationCodeString=" + stopCodeString + "&date=" + DateTime;
+			let eventfulRequestURL = "https://microsoft-apiappda9cd0d4af914533b167fb676acf30d7.azurewebsites.net:443/api/Values?stationCodeString=" + stopCodeString + "&date=" + DateTime + "&stationArrival=" + arrivalTimeString;
 			console.log(eventfulRequestURL);
 			rp(eventfulRequestURL).then(function(body) {
 				let eventfulJson = body;
+				console.log("!!!");
+				console.log(body);
 				let eventfulObj = JSON.parse(eventfulJson);
 				sports = eventfulObj.sports;
 				concert = eventfulObj.concert;
