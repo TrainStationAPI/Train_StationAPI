@@ -21,6 +21,8 @@ export default function() {
 
 	let silverRailKey = "1333ecbd-2a86-08a5-7168-d325c905a731";
 	let dataSet = "UKNational";
+
+	let eventfulKey = ""
 	getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRailKey);
 }
 
@@ -79,16 +81,28 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 			console.log("%j", stopCodeArray);
 
 
-			//let eventfulRequestURL = "http://api.eventful.com/rest/events/search?app_key=" + appKey+ "&where=" + location + "&within=5";
 
 			// Run event queries here using stopCodeArray.  This array contains the 3 char code for each stop.  
 
 			var stopCodeString = stopCodeArray[0];
 			for(var i = 1; i < stopCodeArray.length; i++){
-				stopCodeString += ", " + stopCodeArray[i];
+				stopCodeString += "," + stopCodeArray[i];
 			}
 
 			console.log(stopCodeString);
+
+
+			let eventfulRequestURL = "https://microsoft-apiappda9cd0d4af914533b167fb676acf30d7.azurewebsites.net/api/Values?stationCodeString=" + stopCodeString + "&date=" + DateTime;
+			console.log(eventfulRequestURL);
+			rp(eventfulRequestURL).then(function(body) {
+				let eventfulJson = body;
+				let eventfulObj = JSON.parse(eventfulJson);
+				sports = eventfulObj.sports;
+				concert = eventfulObj.concert;
+			});
+
+			console.log(sports);
+			console.log(concert);
 
 			// Get Weather Data
 			console.log(destinationLocation);
@@ -130,7 +144,7 @@ function getTripDetails(OriginCode, DestinationCode, DateTime, dataSet, silverRa
 	});
 
 	
-	let returnData = new TripDetails(journeyPlanObj, new TrainGuard(weather, null, null, null));
+	let returnData = new TripDetails(journeyPlanObj, new TrainGuard(weather, concert, sports, null));
 
 	return returnData;
 }
